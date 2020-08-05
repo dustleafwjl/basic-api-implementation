@@ -96,7 +96,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void should_return_error_invalid_user_when_register_given_wrong_param() throws Exception {
+    public void should_return_error_invalid_user_when_register_given_wrong_params() throws Exception {
         User user = new User("wjl", "male", 18, "jianlin", "177333344443");
         String stringJson = new ObjectMapper().writeValueAsString(user);
 

@@ -2,69 +2,42 @@ package com.thoughtworks.rslist.api;
 
 
 import com.thoughtworks.rslist.domain.RsEvent;
-import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.domain.UserList;
-import com.thoughtworks.rslist.exception.RsEventNotValidException;
+import com.thoughtworks.rslist.service.RsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @RestController
 public class RsController {
-  private final List<RsEvent> rsList = initRsEventList();
-  private final List<User> userList = UserList.userList;
-  private List<RsEvent> initRsEventList() {
-    List<RsEvent> rsEvents = new ArrayList<>();
-    rsEvents.add(new RsEvent("第一条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
-    rsEvents.add(new RsEvent("第二条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
-    rsEvents.add(new RsEvent("第三条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
-
-    return rsEvents;
-  }
-
   @GetMapping("/rs/list/{index}")
   public ResponseEntity getRsEventByIndex(@PathVariable int index) {
-    if(index <= 0 || index > rsList.size()) {
-      throw new RsEventNotValidException("invalid index");
-    }
-    return ResponseEntity.ok(rsList.get(index - 1));
+    return ResponseEntity.ok(RsService.getInstance().getRsEvent(index));
   }
 
   @GetMapping("/rs/list")
   public ResponseEntity getRsEventListLimit(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
     if(start == null && end == null) {
-      return ResponseEntity.ok(rsList);
+      return ResponseEntity.ok(RsService.getInstance().getAllRsList());
     }
-    if( start<=0 || start > end || end > rsList.size()) {
-      throw new RsEventNotValidException("invalid request param");
-    }
-    return ResponseEntity.ok(rsList.subList(start - 1, end));
+    return ResponseEntity.ok(RsService.getInstance().getRsListForLimit(start, end));
   }
 
   @PostMapping("/rs/event")
   public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
-    User user = rsEvent.getUser();
-    boolean userIsNotExist = userList.stream().noneMatch(ele -> ele.equals(user));
-    if(userIsNotExist) {
-      userList.add(user);
-    }
-    rsList.add(rsEvent);
+    RsService.getInstance().addRsEvent(rsEvent);
     return ResponseEntity.created(null).build();
   }
 
   @PutMapping("/rs/event/{index}")
   public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
-    rsList.get(index - 1).setEventName(rsEvent.getEventName());
-    rsList.get(index - 1).setKeyWord(rsEvent.getKeyWord());
+    RsService.getInstance().updateRsEvent(index, rsEvent);
     return ResponseEntity.ok().build();
   }
   @DeleteMapping("/rs/event/{index}")
   public ResponseEntity removeRsEvent(@PathVariable int index) {
-    rsList.remove(index - 1);
+    RsService.getInstance().removeRsEvent(index);
     return ResponseEntity.ok().build();
   }
 }
