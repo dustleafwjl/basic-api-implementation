@@ -1,8 +1,14 @@
 package com.thoughtworks.rslist.domain;
 
+import javax.validation.constraints.NotNull;
+import java.util.Objects;
+
 public class RsEvent {
+    @NotNull
     private String eventName;
+    @NotNull
     private String keyWord;
+    @NotNull
     private User user;
 
     public RsEvent() {
@@ -37,5 +43,19 @@ public class RsEvent {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RsEvent rsEvent = (RsEvent) o;
+        return Objects.equals(eventName, rsEvent.eventName) &&
+                Objects.equals(user, rsEvent.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventName, user);
     }
 }
