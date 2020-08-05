@@ -19,7 +19,7 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity registerUser(@Valid @RequestBody User user) {
         userList.add(user);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.created(null).header("index", String.valueOf(userList.size())).build();
     }
 
     @GetMapping("/users")

@@ -51,7 +51,8 @@ class RsControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"user\": {\"userName\":\"wjl\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
         mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "4"));
         mockMvc.perform(get("/rs/list/4"))
                 .andExpect(jsonPath("$.eventName").value("猪肉涨价了"))
                 .andExpect(jsonPath("$.keyWord").value("经济"))
@@ -63,7 +64,8 @@ class RsControllerTest {
     public void should_add_new_user_when_addRsEvent_given_new_rsEvent_and_new_user() throws Exception {
         String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"user\": {\"userName\":\"wjll\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
         mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "4"));
     }
 
     @Test
