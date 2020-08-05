@@ -20,18 +20,21 @@ public class RsController {
     rsEvents.add(new RsEvent("第一条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
     rsEvents.add(new RsEvent("第二条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
     rsEvents.add(new RsEvent("第三条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
+
     return rsEvents;
   }
 
   @GetMapping("/rs/list/{index}")
-  public RsEvent getRsEventByIndex(@PathVariable int index) {
-    return rsList.get(index - 1);
+  public ResponseEntity getRsEventByIndex(@PathVariable int index) {
+    return ResponseEntity.ok(rsList.get(index - 1));
   }
 
   @GetMapping("/rs/list")
-  public List<RsEvent> getRsEventListLimit(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
-    if(start == null && end == null) return rsList;
-    return rsList.subList(start - 1, end);
+  public ResponseEntity getRsEventListLimit(@RequestParam(required = false) Integer start, @RequestParam(required = false) Integer end) {
+    if(start == null && end == null) {
+      return ResponseEntity.ok(rsList);
+    }
+    return ResponseEntity.ok(rsList.subList(start - 1, end));
   }
 
   @PostMapping("/rs/event")
@@ -46,12 +49,14 @@ public class RsController {
   }
 
   @PutMapping("/rs/event/{index}")
-  public void updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
+  public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
     rsList.get(index - 1).setEventName(rsEvent.getEventName());
     rsList.get(index - 1).setKeyWord(rsEvent.getKeyWord());
+    return ResponseEntity.ok().build();
   }
   @DeleteMapping("/rs/event/{index}")
-  public void removeRsEvent(@PathVariable int index) {
+  public ResponseEntity removeRsEvent(@PathVariable int index) {
     rsList.remove(index - 1);
+    return ResponseEntity.ok().build();
   }
 }

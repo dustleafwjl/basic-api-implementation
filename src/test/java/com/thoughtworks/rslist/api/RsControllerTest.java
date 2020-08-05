@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.domain.UserList;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -29,7 +31,7 @@ class RsControllerTest {
     @Test
     public void should_get_rsevent_when_getRsEvent_given_index() throws Exception {
         mockMvc.perform(get("/rs/list/1")).andExpect(jsonPath("$.eventName").value("第一条事件"))
-//                .andExpect(jsonPath("$", not(hasKey("user"))))
+                .andExpect(jsonPath("$", not(hasKey("user"))))
                 .andExpect(status().isOk());
     }
 
@@ -47,8 +49,7 @@ class RsControllerTest {
     @Test
     public void should_add_rsEvent_when_addRsEvent_given_new_rsEvent() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        String newRsEventStr = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济",
-                new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
+        String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"user\": {\"userName\":\"wjl\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
         mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list/4"))
@@ -58,20 +59,37 @@ class RsControllerTest {
     }
 
     @Test
+    @Order(0)
     public void should_add_new_user_when_addRsEvent_given_new_rsEvent_and_new_user() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String newRsEventStr = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济",
-                new User("wjll", "male", 18, "wangjianlin@demo.com", "11122223333")));
+        String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"user\": {\"userName\":\"wjll\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
         mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-        assertEquals("wjll", UserList.userList.get(3).getUserName());
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void should_return_bad_request_phone_when_addRsEvent_given_eventName_is_null() throws Exception {
+        String newRsEventStr = "{\"keyWord\":\"经济\",\"user\": {\"userName\":\"wjl\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_return_bad_request_phone_when_addRsEvent_given_keyWord_is_null() throws Exception {
+        String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"user\": {\"userName\":\"wjll\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_return_bad_request_phone_when_addRsEvent_given_user_is_null() throws Exception {
+        String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\"}";
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     public void should_update_when_updateRsEvent_given() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String newRsEventStr = objectMapper.writeValueAsString(new RsEvent("事件更改了", "无标签",
-                new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
+        String newRsEventStr = "{\"eventName\":\"事件更改了\",\"keyWord\":\"无标签\",\"user\": {\"userName\":\"wjll\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
         mockMvc.perform(put("/rs/event/1").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

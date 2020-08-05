@@ -15,6 +15,7 @@ public class User {
     private int age;
     @Email
     private String email;
+    @Pattern(regexp = "^1[0-9]{10}")
     private String phone;
     private int voteNum = 10;
 
