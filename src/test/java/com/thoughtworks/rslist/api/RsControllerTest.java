@@ -111,4 +111,20 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord").value("无标签"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void should_error_when_addRsEvent_given_wrong_params() throws Exception {
+        String newRsEventStr = "{\"eventName\":\"事件更改了\",\"keyWord\":\"无标签\",\"user\": {\"userName\":\"wjl123123123l\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error", is("invalid param")))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_error_when_getRsEvent_given_wrong_index() throws Exception {
+        String newRsEventStr = "{\"eventName\":\"事件更改了\",\"keyWord\":\"无标签\",\"user\": {\"userName\":\"wjl123123123l\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
+        mockMvc.perform(get("/rs/list/0"))
+                .andExpect(jsonPath("$.error", is("invalid index")))
+                .andExpect(status().isBadRequest());
+    }
 }
