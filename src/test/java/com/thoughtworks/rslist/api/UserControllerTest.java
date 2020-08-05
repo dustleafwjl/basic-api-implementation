@@ -34,12 +34,12 @@ class UserControllerTest {
     public void should_get_all_user_when_getUsers_given_request() throws Exception {
 
         mockMvc.perform(get("/users")).andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].userName", is("wjl01")))
-                .andExpect(jsonPath("$[0].age", is(18)))
-                .andExpect(jsonPath("$[1].userName", is("wjl02")))
-                .andExpect(jsonPath("$[1].age", is(22)))
-                .andExpect(jsonPath("$[2].userName", is("wjl03")))
-                .andExpect(jsonPath("$[2].age", is(35)))
+                .andExpect(jsonPath("$[0].user_name", is("wjl01")))
+                .andExpect(jsonPath("$[0].user_age", is(18)))
+                .andExpect(jsonPath("$[1].user_name", is("wjl02")))
+                .andExpect(jsonPath("$[1].user_age", is(22)))
+                .andExpect(jsonPath("$[2].user_name", is("wjl03")))
+                .andExpect(jsonPath("$[2].user_age", is(35)))
                 .andExpect(status().isOk());
     }
 

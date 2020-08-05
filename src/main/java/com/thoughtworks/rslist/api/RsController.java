@@ -45,7 +45,7 @@ public class RsController {
       userList.add(user);
     }
     rsList.add(rsEvent);
-    return ResponseEntity.created(null).header("index", String.valueOf(userList.size())).build();
+    return ResponseEntity.created(null).header("index", String.valueOf(rsList.size())).build();
   }
 
   @PutMapping("/rs/event/{index}")
