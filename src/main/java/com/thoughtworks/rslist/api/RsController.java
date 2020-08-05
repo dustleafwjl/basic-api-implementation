@@ -38,6 +38,9 @@ public class RsController {
     if(start == null && end == null) {
       return ResponseEntity.ok(rsList);
     }
+    if( start<=0 || start > end || end > rsList.size()) {
+      throw new RsEventNotValidException("invalid request param");
+    }
     return ResponseEntity.ok(rsList.subList(start - 1, end));
   }
 

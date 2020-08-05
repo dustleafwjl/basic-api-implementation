@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
@@ -47,10 +48,19 @@ class RsControllerTest {
     }
 
     @Test
+    public void should_return_error_invalid_request_param_when_getRsEvent_given_wrong_limit() throws Exception {
+        String newRsEventStr = "{\"eventName\":\"事件更改了\",\"keyWord\":\"无标签\",\"user\": {\"userName\":\"wjl123123123l\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
+        mockMvc.perform(get("/rs/list?start=0&end=2"))
+                .andExpect(jsonPath("$.error", is("invalid request param")))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void should_add_rsEvent_when_addRsEvent_given_new_rsEvent() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"user\": {\"userName\":\"wjl\",\"age\": 19,\"gender\": \"male\",\"email\": \"a@b.com\",\"phone\": \"18888888888\"}}";
-        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+        objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
+        String jsonString = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济", new User("wjl", "male", 19, "wjl@demo.com", "12233334444")));
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list/4"))
                 .andExpect(jsonPath("$.eventName").value("猪肉涨价了"))
