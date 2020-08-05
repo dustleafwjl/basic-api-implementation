@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -50,6 +51,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/list/4"))
                 .andExpect(jsonPath("$.eventName").value("猪肉涨价了"))
                 .andExpect(jsonPath("$.keyWord").value("经济"))
+                .andExpect(jsonPath("$.user.userName", is("wjl")))
                 .andExpect(status().isOk());
     }
 
@@ -60,6 +62,30 @@ class RsControllerTest {
         mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         assertEquals("wjll", UserList.userList.get(3).getUserName());
+    }
+
+    @Test
+    public void should_return_bad_request_phone_when_addRsEvent_given_eventName_is_null() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String newRsEventStr = objectMapper.writeValueAsString(new RsEvent(null, "经济", new User("wjll", "male", 18, "wangjianlin@demo.com", "11122223333")));
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_return_bad_request_phone_when_addRsEvent_given_keyWord_is_null() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String newRsEventStr = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", null, new User("wjll", "male", 18, "wangjianlin@demo.com", "11122223333")));
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void should_return_bad_request_phone_when_addRsEvent_given_user_is_null() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String newRsEventStr = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济", null));
+        mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -87,4 +113,6 @@ class RsControllerTest {
                 .andExpect(jsonPath("$[1].keyWord").value("无标签"))
                 .andExpect(status().isOk());
     }
+
+
 }

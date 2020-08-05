@@ -12,8 +12,8 @@ import java.util.List;
 
 @RestController
 public class RsController {
-  private List<RsEvent> rsList = initRsEventList();
-  private List<User> userList = UserList.userList;
+  private final List<RsEvent> rsList = initRsEventList();
+  private final List<User> userList = UserList.userList;
   private List<RsEvent> initRsEventList() {
     List<RsEvent> rsEvents = new ArrayList<>();
     rsEvents.add(new RsEvent("第一条事件", "无标签", new User("wjl", "male", 18, "wangjianlin@demo.com", "11122223333")));
