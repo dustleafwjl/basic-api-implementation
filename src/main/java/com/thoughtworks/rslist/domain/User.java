@@ -1,5 +1,8 @@
 package com.thoughtworks.rslist.domain;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import javax.validation.constraints.*;
 import java.util.Objects;
 
@@ -27,42 +30,47 @@ public class User {
         this.phone = phone;
     }
 
+    @JsonGetter("user_name")
     public String getUserName() {
         return userName;
     }
-
+    @JsonSetter("user_name")
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    @JsonGetter("user_gender")
     public String getGender() {
         return gender;
     }
-
+    @JsonSetter("user_gender")
     public void setGender(String gender) {
         this.gender = gender;
     }
 
+    @JsonGetter("user_age")
     public int getAge() {
         return age;
     }
-
+    @JsonSetter("user_age")
     public void setAge(int age) {
         this.age = age;
     }
 
+    @JsonGetter("user_email")
     public String getEmail() {
         return email;
     }
-
+    @JsonSetter("user_email")
     public void setEmail(String email) {
         this.email = email;
     }
 
+    @JsonGetter("user_phone")
     public String getPhone() {
         return phone;
     }
-
+    @JsonSetter("user_phone")
     public void setPhone(String phone) {
         this.phone = phone;
     }
