@@ -6,9 +6,9 @@ import com.thoughtworks.rslist.domain.UserList;
 import java.util.List;
 
 public class UserService {
-    static public boolean addUser(User user) {
+    static public int addUser(User user) {
         UserList.userList.add(user);
-        return true;
+        return UserList.userList.size();
     }
     static public List<User> getUsers() {
         return UserList.userList;

@@ -60,6 +60,7 @@ class RsControllerTest {
         objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
         String jsonString = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济", new User("wjl", "male", 19, "wjl@demo.com", "12233334444")));
         mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(header().string("index", "4"))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/list/4"))
                 .andExpect(jsonPath("$.eventName").value("猪肉涨价了"))

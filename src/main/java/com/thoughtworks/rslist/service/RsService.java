@@ -52,13 +52,14 @@ public class RsService {
         return rsList.subList(start - 1, end);
     }
 
-    public void addRsEvent(RsEvent rsEvent) {
+    public int addRsEvent(RsEvent rsEvent) {
         User user = rsEvent.getUser();
         boolean userIsNotExist = userList.stream().noneMatch(ele -> ele.equals(user));
         if(userIsNotExist) {
             userList.add(user);
         }
         rsList.add(rsEvent);
+        return rsList.size();
     }
     public void removeRsEvent(int index) {
         if(index <= 0 || index > rsList.size()) {
