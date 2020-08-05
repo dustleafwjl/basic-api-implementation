@@ -95,6 +95,18 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    public void should_return_error_invalid_user_when_register_given_wrong_param() throws Exception {
+        User user = new User("wjl", "male", 18, "jianlin", "177333344443");
+        String stringJson = new ObjectMapper().writeValueAsString(user);
+
+        user.setPhone("21122223333");
+        mockMvc.perform(post("/user").content(stringJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error", is("invalid user")))
+                .andExpect(status().isBadRequest());
+
+
+    }
 
 
 
