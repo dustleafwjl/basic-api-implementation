@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.dto;
 
 
+import com.thoughtworks.rslist.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +27,9 @@ public class UserDto {
     private String email;
     private String phone;
     private int voteNum;
+
+
+    public User userDtotoUser() {
+        return new User(this.userName, this.gender, this.age, this.email, this.phone);
+    }
 }

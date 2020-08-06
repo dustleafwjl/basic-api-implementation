@@ -18,7 +18,7 @@ public class UserService {
     private UserRepository userRepository;
     public int addUser(User user) {
         UserDto userDto = UserDto.builder().userName(user.getUserName()).age(user.getAge())
-                .gender(user.getGender()).phone(user.getPhone()).voteNum(10).build();
+                .gender(user.getGender()).phone(user.getPhone()).email(user.getEmail()).voteNum(10).build();
         userRepository.save(userDto);
         return (int)userRepository.count();
     }

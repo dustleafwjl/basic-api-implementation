@@ -2,10 +2,15 @@ package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.thoughtworks.rslist.dto.RsEventDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
+
 
 public class RsEvent {
     @NotNull
@@ -13,17 +18,16 @@ public class RsEvent {
     @NotNull
     private String keyWord;
     @NotNull
-    @Valid
-    private User user;
+    private int userId;
 
     public RsEvent() {
 
     }
 
-    public RsEvent(String eventName, String keyWord, User user) {
+    public RsEvent(String eventName, String keyWord, int userId) {
         this.eventName = eventName;
         this.keyWord = keyWord;
-        this.user = user;
+        this.userId = userId;
     }
 
     public String getEventName() {
@@ -42,14 +46,12 @@ public class RsEvent {
         this.keyWord = keyWord;
     }
 
-    @JsonIgnore
-    public User getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
-    @JsonProperty
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -58,11 +60,16 @@ public class RsEvent {
         if (o == null || getClass() != o.getClass()) return false;
         RsEvent rsEvent = (RsEvent) o;
         return Objects.equals(eventName, rsEvent.eventName) &&
-                Objects.equals(user, rsEvent.user);
+                Objects.equals(userId, rsEvent.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventName, user);
+        return Objects.hash(eventName, userId);
+    }
+
+    public RsEventDto rsEventToRsEventDto() {
+//        return RsEventDto.builder().eventName(this.eventName).keyWord(this.keyWord).userDto()
+        return null;
     }
 }

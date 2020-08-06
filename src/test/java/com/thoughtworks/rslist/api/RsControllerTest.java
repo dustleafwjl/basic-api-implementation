@@ -58,7 +58,7 @@ class RsControllerTest {
     public void should_add_rsEvent_when_addRsEvent_given_new_rsEvent() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.USE_ANNOTATIONS, false);
-        String jsonString = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济", new User("wjl", "male", 19, "wjl@demo.com", "12233334444")));
+//        String jsonString = objectMapper.writeValueAsString(new RsEvent("猪肉涨价了", "经济", new User("wjl", "male", 19, "wjl@demo.com", "12233334444")));
         String newRsEventStr = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\",\"user\": {\"user_name\":\"wjll\",\"user_age\": 19,\"user_gender\": \"user_male\",\"user_email\": \"a@b.com\",\"user_phone\": \"18888888888\"}}";
         mockMvc.perform(post("/rs/event").content(newRsEventStr).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().string("index", "4"))

@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import com.thoughtworks.rslist.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -110,5 +111,11 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(userName, gender, age, email, phone);
+    }
+
+
+    public UserDto userToUserDto() {
+        return UserDto.builder().userName(this.getUserName()).age(this.getAge())
+                .gender(this.getGender()).phone(this.getPhone()).voteNum(10).build();
     }
 }
