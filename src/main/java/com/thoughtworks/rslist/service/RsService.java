@@ -33,10 +33,10 @@ public class RsService {
 //            throw new RsEventNotValidException("invalid index");
 //        }
         RsEventDto rsEventDto = rsEventRepository.findById(index).orElse(new RsEventDto());
-        RsEvent rsEvent = rsEventDto.rsEventDtoToRsEvent();
-        if(rsEvent.getEventName() == null) {
+        if(rsEventDto.getEventName() == null) {
             return null;
         }
+        RsEvent rsEvent = new RsEvent(rsEventDto.getEventName(), rsEventDto.getKeyWord(), rsEventDto.getUserDto().getId());
         return rsEvent;
     }
 

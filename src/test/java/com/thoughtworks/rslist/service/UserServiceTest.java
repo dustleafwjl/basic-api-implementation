@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.repository.UserRepository;
@@ -27,10 +28,11 @@ class UserServiceTest {
     UserRepository userRepository;
 
     User user;
-
+    RsEvent rsEvent;
     @BeforeEach
     void setup () {
         user = new User("wjl", "male", 18, "abc@aa.com", "12233334444");
+        rsEvent = new RsEvent("one event start", "event", 1);
     }
 
     @Test
@@ -55,14 +57,21 @@ class UserServiceTest {
     }
 
     @Test
-    void should_remove_user_when_removeUserById_given_userId() throws Exception {
+    void should_remove_user_and_rsEvent_when_removeUserById_given_userId() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(user);
+        String rseventString = objectMapper.writeValueAsString(rsEvent);
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/rs/event").content(rseventString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        mockMvc.perform(post("/rs/event").content(rseventString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(delete("/user/1"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/user/1"))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/rs/list/2"))
                 .andExpect(status().isBadRequest());
     }
 }

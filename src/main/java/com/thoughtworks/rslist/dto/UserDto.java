@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -28,6 +29,8 @@ public class UserDto {
     private String phone;
     private int voteNum;
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "userDto")
+    private List<RsEventDto> rsEventDtos;
 
     public User userDtotoUser() {
         return new User(this.userName, this.gender, this.age, this.email, this.phone);
