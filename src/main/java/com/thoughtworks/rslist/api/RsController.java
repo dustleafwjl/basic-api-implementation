@@ -18,7 +18,11 @@ public class RsController {
 
   @GetMapping("/rs/list/{index}")
   public ResponseEntity getRsEventByIndex(@PathVariable int index) {
-    return ResponseEntity.ok(rsService.getRsEvent(index));
+    RsEvent rsEvent = rsService.getRsEvent(index);
+    if(rsEvent == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    return ResponseEntity.ok(rsEvent);
   }
 
   @GetMapping("/rs/list")

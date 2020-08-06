@@ -68,11 +68,7 @@ public class RsService {
         return rsEventRepository.findAll().size();
     }
     public void removeRsEvent(int index) {
-//        if(index <= 0 || index > rsList.size()) {
-//            throw new RsEventNotValidException("invalid request param");
-//        }
-//        rsList.remove(index - 1);
-
+        rsEventRepository.deleteById(index);
     }
     public void updateRsEvent(int index, RsEvent rsEvent) {
 //        rsList.get(index - 1).setEventName(rsEvent.getEventName());
