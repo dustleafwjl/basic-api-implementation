@@ -16,9 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -83,5 +83,31 @@ class RsServiceTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list/2"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_update_when_patch_updateRsEvent_given_id_and_rsEvent() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        rsEvent = new RsEvent("one event start", "event", 1);
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        String jsonString1 = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user").content(jsonString1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "1"));
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        rsEvent.setKeyWord("double");
+        jsonString = objectMapper.writeValueAsString(rsEvent);
+        mockMvc.perform(patch("/rs/event/2").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/list/2"))
+                .andExpect(jsonPath("$.keyWord", is("double")));
+
+
     }
 }

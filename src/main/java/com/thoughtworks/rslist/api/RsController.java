@@ -42,14 +42,20 @@ public class RsController {
     return ResponseEntity.created(null).header("index", String.valueOf(index)).build();
   }
 
-  @PutMapping("/rs/event/{index}")
-  public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
-    rsService.updateRsEvent(index, rsEvent);
-    return ResponseEntity.ok().build();
-  }
+//  @PutMapping("/rs/event/{index}")
+//  public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
+//    rsService.updateRsEvent(index, rsEvent);
+//    return ResponseEntity.ok().build();
+//  }
   @DeleteMapping("/rs/event/{index}")
   public ResponseEntity removeRsEvent(@PathVariable int index) {
     rsService.removeRsEvent(index);
+    return ResponseEntity.ok().build();
+  }
+
+  @PatchMapping("/rs/event/{index}")
+  public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
+    rsService.updateRsEvent(index, rsEvent);
     return ResponseEntity.ok().build();
   }
 }

@@ -29,9 +29,9 @@ public class RsService {
         return UserList.userList;
     }
     public RsEvent getRsEvent(int index) {
-        if(index <= 0 || index > rsEventRepository.count()) {
-            throw new RsEventNotValidException("invalid index");
-        }
+//        if(index <= 0 || index > rsEventRepository.count()) {
+//            throw new RsEventNotValidException("invalid index");
+//        }
         RsEventDto rsEventDto = rsEventRepository.findById(index).orElse(new RsEventDto());
         RsEvent rsEvent = rsEventDto.rsEventDtoToRsEvent();
         if(rsEvent.getEventName() == null) {
@@ -68,10 +68,18 @@ public class RsService {
         return rsEventRepository.findAll().size();
     }
     public void removeRsEvent(int index) {
-        rsEventRepository.deleteById(index);
+        try {
+            rsEventRepository.deleteById(index);
+        } catch (Exception e) {
+
+        }
     }
     public void updateRsEvent(int index, RsEvent rsEvent) {
-//        rsList.get(index - 1).setEventName(rsEvent.getEventName());
-//        rsList.get(index - 1).setKeyWord(rsEvent.getKeyWord());
+        RsEventDto rsEventDto = rsEventRepository.findById(index).orElse(null);
+        if(rsEventDto != null) {
+            rsEventDto.setEventName(rsEvent.getEventName());
+            rsEventDto.setKeyWord(rsEvent.getKeyWord());
+            rsEventRepository.save(rsEventDto);
+        }
     }
 }
