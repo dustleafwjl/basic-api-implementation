@@ -50,7 +50,7 @@ class UserControllerTest {
         String stringJson = new ObjectMapper().writeValueAsString(user);
         mockMvc.perform(post("/user").content(stringJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().string("index", "4"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated()); 
     }
 
     @Test
