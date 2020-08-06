@@ -23,9 +23,15 @@ public class UserService {
         return (int)userRepository.count();
     }
 
-    public User getUserById() {
-        List<UserDto> all = userRepository.findAll();
-        return null;
+    public void removeUserById(int userId) {
+        userRepository.deleteById(userId);
+    }
+
+    public User getUserById(int userId) {
+        UserDto userDto = userRepository.findById(userId).orElse(new UserDto());
+        User user = User.builder().userName(userDto.getUserName()).age(userDto.getAge())
+                    .gender(userDto.getGender()).email(userDto.getEmail()).phone(userDto.getPhone()).build();
+        return user;
     }
     public List<User> getUsers() {
         return UserList.userList;

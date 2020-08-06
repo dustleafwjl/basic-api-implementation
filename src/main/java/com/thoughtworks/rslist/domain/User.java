@@ -2,10 +2,16 @@ package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.util.Objects;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @NotNull
     @Size(max = 8)
@@ -20,6 +26,7 @@ public class User {
     private String email;
     @Pattern(regexp = "^1[0-9]{10}")
     private String phone;
+    @Builder.Default
     private int voteNum = 10;
 
     public User(String userName, String gender, int age, String email, String phone) {

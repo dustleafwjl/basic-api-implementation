@@ -6,10 +6,7 @@ import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -25,6 +22,21 @@ public class UserController {
     public ResponseEntity registerUser(@Valid @RequestBody User user) {
         int index = userService.addUser(user);
         return ResponseEntity.created(null).header("index", String.valueOf(index)).build();
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity getUserById(@PathVariable int id) {
+        User user = userService.getUserById(id);
+        if(user.getUserName() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity removeUserById(@PathVariable int id) {
+        userService.removeUserById(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/users")
