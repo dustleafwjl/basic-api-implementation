@@ -19,14 +19,12 @@ public class VoteDto {
     @Id
     @GeneratedValue
     private int id;
-    private int userId;
-    private int eventId;
     private int voteNum;
     private String voteTime;
 
-//    @ManyToOne
-//    private UserDto userDto;
-//    @Id
-//    @ManyToOne
-//    private RsEventDto rsEventDto;
+    @ManyToOne(targetEntity = UserDto.class)
+    private UserDto userDto;
+
+    @ManyToOne(targetEntity = RsEventDto.class)
+    private RsEventDto rsEventDto;
 }

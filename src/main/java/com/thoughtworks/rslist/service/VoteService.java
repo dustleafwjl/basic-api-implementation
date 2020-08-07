@@ -24,13 +24,17 @@ public class VoteService {
     public int addVoteRecord(int eventId, Vote vote) {
         int voteNum = vote.getVoteNum();
         UserDto userDto = userRepository.findById(vote.getUserId()).orElse(null);
-        RsEventDto rsEventDto = rsEventRepository.findById(vote.getEventId()).orElse(null);
+        RsEventDto rsEventDto = rsEventRepository.findById(eventId).orElse(null);
+
+        if(userDto == null || rsEventDto == null) {
+            return -1;
+        }
         if(voteNum > userDto.getVoteNum()) {
             return -1;
         }
-        VoteDto voteDto = VoteDto.builder().eventId(eventId).userId(vote.getUserId()).voteNum(vote.getVoteNum())
+        VoteDto voteDto = VoteDto.builder().voteNum(vote.getVoteNum())
+                .rsEventDto(rsEventDto).userDto(userDto)
                 .voteTime(vote.getVoteTime()).build();
-//        .rsEventDto(rsEventDto).userDto(userDto)
         voteRepository.save(voteDto);
         return 1;
     }

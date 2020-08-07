@@ -28,8 +28,8 @@ public class RsEventDto {
     @ManyToOne
     private UserDto userDto;
 
-//    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "rsEventDto")
-//    private List<VoteDto> voteDto;
+    @OneToMany(targetEntity = VoteDto.class, cascade = CascadeType.REMOVE, mappedBy = "rsEventDto")
+    private List<VoteDto> voteDto;
 
     public RsEvent rsEventDtoToRsEvent() {
         return new RsEvent(this.eventName, this.keyWord, userDto.getId());
