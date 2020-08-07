@@ -1,7 +1,5 @@
-package com.thoughtworks.rslist.service;
+package com.thoughtworks.rslist.api;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
@@ -20,13 +18,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class VoteServiceTest {
+class VoteControllerTest {
     @Autowired
     MockMvc mockMvc;
 
@@ -104,10 +104,11 @@ class VoteServiceTest {
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/rs/vote").param("eventId", "2")
-                        .param("pageIndex", "1"))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$[0].eventId", is(2)));
+                .param("pageIndex", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].eventId", is(2)));
     }
+
     @Test
     public void should_get_vote_record_when_get_voteRecord_given_userid_and_pageindex() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -127,9 +128,38 @@ class VoteServiceTest {
         mockMvc.perform(post("/rs/vote/2").content(objectMapper.writeValueAsString(vote)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/rs/vote").param("eventId", "2").param("userId", "1")
+        mockMvc.perform(get("/rs/vote").param("userId", "1")
                 .param("pageIndex", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].eventId", is(2)));
+    }
+
+    @Test
+    public void should_get_vote_record_when_get_voteRecord_given_userid_and_eventid_pageindex() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        rsEvent = new RsEvent("one event start", "event", 1);
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        String jsonString1 = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user").content(jsonString1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "1"));
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+
+        Vote vote = Vote.builder().userId(1).voteNum(4).voteTime("sadfasd").build();
+        mockMvc.perform(post("/rs/vote/2").content(objectMapper.writeValueAsString(vote)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        vote.setVoteTime("2019-1");
+        mockMvc.perform(post("/rs/vote/2").content(objectMapper.writeValueAsString(vote)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+
+        mockMvc.perform(get("/rs/vote").param("eventId", "2").param("userId", "1")
+                .param("pageIndex", "1"))
+                .andExpect(status().isOk());
+//                .andExpect(jsonPath("$[0].eventId", is(2)));
     }
 }

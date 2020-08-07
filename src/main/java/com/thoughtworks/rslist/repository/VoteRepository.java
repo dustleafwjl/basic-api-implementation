@@ -15,8 +15,14 @@ import java.util.List;
 @Repository
 public interface VoteRepository extends PagingAndSortingRepository<VoteDto, Integer> {
 
-//    @Query("select v from VoteDto v where v.user.id = :userId and v.rsevent.id = :eventId")
-//    public List<VoteDto> findAccordingToUserIdAndEventId(int userId, int eventId, Pageable pageable);
+    @Query(value = "select * from vote v where v.user_id = :userId", nativeQuery = true)
+    public List<VoteDto> findAccordingToUserId(int userId, Pageable pageable);
+
+    @Query(value = "select * from vote v where v.rs_id = :eventId", nativeQuery = true)
+    public List<VoteDto> findAccordingToEventId(int eventId, Pageable pageable);
+
+    @Query(value = "select * from vote v where v.user_id = :userId and v.rs_id = :eventId", nativeQuery = true)
+    List<VoteDto> findAccordingToEventIdAndUserId(int userId, int eventId, Pageable pageable);
 }
 
 

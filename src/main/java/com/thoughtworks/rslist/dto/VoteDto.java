@@ -19,12 +19,16 @@ public class VoteDto {
     @Id
     @GeneratedValue
     private int id;
+    @JoinColumn(name = "vote_num")
     private int voteNum;
+    @JoinColumn(name = "vote_time")
     private String voteTime;
 
     @ManyToOne(targetEntity = UserDto.class)
+    @JoinColumn(name = "user_id")
     private UserDto userDto;
 
     @ManyToOne(targetEntity = RsEventDto.class)
+    @JoinColumn(name = "rs_id")
     private RsEventDto rsEventDto;
 }

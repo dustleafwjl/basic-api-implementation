@@ -24,8 +24,10 @@ public class RsEventDto {
     private int id;
     private String eventName;
     private String keyWord;
+    private int voteNum;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private UserDto userDto;
 
     @OneToMany(targetEntity = VoteDto.class, cascade = CascadeType.REMOVE, mappedBy = "rsEventDto")
