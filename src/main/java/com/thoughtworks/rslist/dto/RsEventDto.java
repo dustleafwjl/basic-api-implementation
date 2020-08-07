@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "rsevent")
@@ -26,6 +27,9 @@ public class RsEventDto {
 
     @ManyToOne
     private UserDto userDto;
+
+//    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "rsEventDto")
+//    private List<VoteDto> voteDto;
 
     public RsEvent rsEventDtoToRsEvent() {
         return new RsEvent(this.eventName, this.keyWord, userDto.getId());

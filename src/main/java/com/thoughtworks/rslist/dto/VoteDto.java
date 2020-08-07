@@ -1,14 +1,12 @@
 package com.thoughtworks.rslist.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Entity
@@ -25,4 +23,10 @@ public class VoteDto {
     private int eventId;
     private int voteNum;
     private String voteTime;
+
+//    @ManyToOne
+//    private UserDto userDto;
+//    @Id
+//    @ManyToOne
+//    private RsEventDto rsEventDto;
 }

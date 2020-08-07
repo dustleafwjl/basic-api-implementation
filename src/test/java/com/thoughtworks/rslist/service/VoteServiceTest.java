@@ -83,4 +83,29 @@ class VoteServiceTest {
         mockMvc.perform(post("/rs/vote/2").content(objectMapper.writeValueAsString(vote)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    public void should_get_vote_record_when_get_voteRecord_given_userid_and_eventid_and_pageindex() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        rsEvent = new RsEvent("one event start", "event", 1);
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
+        String jsonString1 = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user").content(jsonString1).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "1"));
+        mockMvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+
+        Vote vote = Vote.builder().userId(1).voteNum(11).voteTime("sadfasd").build();
+        mockMvc.perform(post("/rs/vote/2").content(objectMapper.writeValueAsString(vote)).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/voteRecord").param("userId", "1").param("eventId", "2")
+                        .param("pageIndex", "1"))
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$[0].eventId", is("2")));
+    }
 }
