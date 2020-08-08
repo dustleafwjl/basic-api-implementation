@@ -22,6 +22,12 @@ public class VoteController {
         return ResponseEntity.created(null).build();
     }
 
+
+    @GetMapping(value = "/rs/vote", params = "startTime")
+    public ResponseEntity getVoteRecordByTime(@RequestParam String startTime, @RequestParam String endTime) {
+        List<Vote> votes = voteService.getVoteRecordByTime(startTime, endTime);
+        return ResponseEntity.ok(votes);
+    }
     @GetMapping("/rs/vote")
     public ResponseEntity getVoteRecord(@RequestParam(required = false) Integer eventId,
                                         @RequestParam(required = false) Integer userId,
@@ -29,4 +35,6 @@ public class VoteController {
         List<Vote> votes = voteService.getVoteRecord(eventId, userId, pageIndex);
         return ResponseEntity.ok(votes);
     }
+
+
 }

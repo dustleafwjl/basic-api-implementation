@@ -23,6 +23,9 @@ public interface VoteRepository extends PagingAndSortingRepository<VoteDto, Inte
 
     @Query(value = "select * from vote v where v.rs_id = :eventId and v.user_id = :userId ", nativeQuery = true)
     List<VoteDto> findAccordingToEventIdAndUserId(int eventId, int userId, Pageable pageable);
+
+    @Query(value = "select * from vote v where v.vote_time < :endTime and v.vote_time > :startTime ", nativeQuery = true)
+    List<VoteDto> findAccordingToTimeLimit(String startTime, String endTime);
 }
 
 

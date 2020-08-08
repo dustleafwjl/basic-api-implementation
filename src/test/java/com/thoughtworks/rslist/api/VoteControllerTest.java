@@ -1,11 +1,13 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.domain.Vote;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
@@ -162,5 +164,34 @@ class VoteControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].eventId", is(rsEventDto.getId())))
                 .andExpect(jsonPath("$[0].userId", is(userDto.getId())));
+    }
+
+    @Test
+    public void should_get_vote_record_when_get_start_time_and_end_time() throws Exception {
+        long startTime = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        long endTime = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")) + 3000;
+
+        VoteDto voteDtoFirst = VoteDto.builder().voteTime(String.valueOf(startTime+100))
+                .userDto(userDto).rsEventDto(rsEventDto).voteNum(2).build();
+        VoteDto voteDtoSecond = VoteDto.builder().voteTime(String.valueOf(startTime+200))
+                .userDto(userDto).rsEventDto(rsEventDto).voteNum(3).build();
+        VoteDto voteDtoThird = VoteDto.builder().voteTime(String.valueOf(startTime+4000))
+                .userDto(userDto).rsEventDto(rsEventDto).voteNum(2).build();
+
+        voteDtoFirst = voteRepository.save(voteDtoFirst);
+        voteDtoSecond = voteRepository.save(voteDtoSecond);
+        voteDtoThird = voteRepository.save(voteDtoThird);
+
+        mockMvc.perform(get("/rs/vote")
+                .param("startTime", String.valueOf(startTime))
+                .param("endTime", String.valueOf(endTime)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].eventId", is(rsEventDto.getId())))
+                .andExpect(jsonPath("$[0].userId", is(userDto.getId())))
+                .andExpect(jsonPath("$[0].voteNum", is(2)))
+                .andExpect(jsonPath("$[1].eventId", is(rsEventDto.getId())))
+                .andExpect(jsonPath("$[1].userId", is(userDto.getId())))
+                .andExpect(jsonPath("$[1].voteNum", is(3)));
     }
 }
