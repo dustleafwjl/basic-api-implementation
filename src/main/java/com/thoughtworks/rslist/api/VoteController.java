@@ -6,10 +6,9 @@ import com.thoughtworks.rslist.repository.VoteRepository;
 import com.thoughtworks.rslist.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class VoteController {
@@ -19,9 +18,15 @@ public class VoteController {
 
     @PostMapping("/rs/vote/{eventId}")
     public ResponseEntity vote(@PathVariable int eventId, @RequestBody Vote vote) {
-        if(voteService.addVoteRecord(eventId, vote) == -1) {
-            return ResponseEntity.badRequest().build();
-        }
+        voteService.addVoteRecord(eventId, vote);
         return ResponseEntity.created(null).build();
+    }
+
+    @GetMapping("/rs/vote")
+    public ResponseEntity getVoteRecord(@RequestParam(required = false) Integer eventId,
+                                        @RequestParam(required = false) Integer userId,
+                                        @RequestParam(required = false) Integer pageIndex) {
+        List<Vote> votes = voteService.getVoteRecord(eventId, userId, pageIndex);
+        return ResponseEntity.ok(votes);
     }
 }

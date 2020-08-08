@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class RsEventExecptionHandler {
-    @ExceptionHandler({RsEventNotValidException.class, MethodArgumentNotValidException.class})
+    @ExceptionHandler({RsEventNotValidException.class, MethodArgumentNotValidException.class, RuntimeException.class})
     public ResponseEntity RsEventExecptionHandler(HttpServletRequest request, Exception e) {
         Logger logger = LoggerFactory.getLogger(RsEventExecptionHandler.class);
         String errorMessage;

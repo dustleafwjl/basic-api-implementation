@@ -1,7 +1,6 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.domain.UserList;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    private final List<User> userList = UserList.userList;
     @Autowired
     private UserRepository userRepository;
     @Autowired

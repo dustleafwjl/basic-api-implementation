@@ -1,16 +1,13 @@
 package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.domain.UserList;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -34,6 +31,12 @@ public class UserService {
         return user;
     }
     public List<User> getUsers() {
-        return UserList.userList;
+        List<User> users = userRepository.findAll().stream()
+                .map(ele -> User.builder()
+                        .age(ele.getAge()).userName(ele.getUserName())
+                        .email(ele.getEmail()).gender(ele.getGender())
+                        .phone(ele.getPhone()).voteNum(ele.getVoteNum())
+                        .build()).collect(Collectors.toList());
+        return users;
     }
 }

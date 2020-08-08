@@ -1,14 +1,12 @@
 package com.thoughtworks.rslist.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @Entity
@@ -21,8 +19,16 @@ public class VoteDto {
     @Id
     @GeneratedValue
     private int id;
-    private int userId;
-    private int eventId;
+    @JoinColumn(name = "vote_num")
     private int voteNum;
+    @JoinColumn(name = "vote_time")
     private String voteTime;
+
+    @ManyToOne(targetEntity = UserDto.class)
+    @JoinColumn(name = "user_id")
+    private UserDto userDto;
+
+    @ManyToOne(targetEntity = RsEventDto.class)
+    @JoinColumn(name = "rs_id")
+    private RsEventDto rsEventDto;
 }
