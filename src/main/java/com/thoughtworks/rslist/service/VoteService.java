@@ -64,4 +64,12 @@ public class VoteService {
     }
 
 
+    public List<Vote> getVoteRecordByTime(String startTime, String endTime) {
+        List<VoteDto> voteDtos = voteRepository.findAccordingToTimeLimit(startTime, endTime);
+        List<Vote> votes = voteDtos.stream()
+                .map(ele -> Vote.builder().userId(ele.getUserDto().getId()).eventId(ele.getRsEventDto().getId())
+                        .voteNum(ele.getVoteNum()).voteTime(ele.getVoteTime())
+                        .build()).collect(Collectors.toList());
+        return votes;
+    }
 }
