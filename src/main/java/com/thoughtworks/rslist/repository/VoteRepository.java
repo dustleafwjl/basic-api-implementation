@@ -21,8 +21,8 @@ public interface VoteRepository extends PagingAndSortingRepository<VoteDto, Inte
     @Query(value = "select * from vote v where v.rs_id = :eventId", nativeQuery = true)
     public List<VoteDto> findAccordingToEventId(int eventId, Pageable pageable);
 
-    @Query(value = "select * from vote v where v.user_id = :userId and v.rs_id = :eventId", nativeQuery = true)
-    List<VoteDto> findAccordingToEventIdAndUserId(int userId, int eventId, Pageable pageable);
+    @Query(value = "select * from vote v where v.rs_id = :eventId and v.user_id = :userId ", nativeQuery = true)
+    List<VoteDto> findAccordingToEventIdAndUserId(int eventId, int userId, Pageable pageable);
 }
 
 

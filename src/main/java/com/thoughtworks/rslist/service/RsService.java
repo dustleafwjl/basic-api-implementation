@@ -1,8 +1,6 @@
 package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.domain.RsEvent;
-import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.domain.UserList;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.exception.RsEventNotValidException;
@@ -11,8 +9,6 @@ import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,17 +21,9 @@ public class RsService {
     @Autowired
     UserRepository userRepository;
 
-    private List<User> initRsUserList() {
-        return UserList.userList;
-    }
     public RsEvent getRsEvent(int index) {
-//        if(index <= 0 || index > rsEventRepository.count()) {
-//            throw new RsEventNotValidException("invalid index");
-//        }
+
         RsEventDto rsEventDto = rsEventRepository.findById(index).orElse(new RsEventDto());
-        if(rsEventDto.getEventName() == null) {
-            return null;
-        }
         RsEvent rsEvent = new RsEvent(rsEventDto.getEventName(), rsEventDto.getKeyWord(), rsEventDto.getUserDto().getId());
         return rsEvent;
     }
@@ -64,8 +52,9 @@ public class RsService {
             return -1;
         }
         UserDto userDto = userRepository.findById(rsEvent.getUserId()).orElse(null);
-        rsEventRepository.save(RsEventDto.builder().eventName(rsEvent.getEventName()).keyWord(rsEvent.getKeyWord()).userDto(userDto).build());
-        return rsEventRepository.findAll().size();
+        RsEventDto rsEventDto = rsEventRepository.save(RsEventDto.builder()
+                .eventName(rsEvent.getEventName()).keyWord(rsEvent.getKeyWord()).userDto(userDto).build());
+        return rsEventDto.getId();
     }
     public void removeRsEvent(int index) {
         try {

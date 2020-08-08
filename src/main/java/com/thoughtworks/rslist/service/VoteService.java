@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist.service;
 
-import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.domain.Vote;
 import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.dto.UserDto;
@@ -11,7 +10,6 @@ import com.thoughtworks.rslist.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -46,14 +44,6 @@ public class VoteService {
         rsEventRepository.save(rsEventDto);
     }
 
-    public List<Vote> getVotesByrsEventId(int eventId, int pageIndex) {
-        Pageable pageable = PageRequest.of(pageIndex-1, 5);
-        List<Vote> votes = voteRepository.findAccordingToEventId(eventId, pageable).stream()
-                .map(ele -> Vote.builder().userId(ele.getUserDto().getId()).eventId(ele.getRsEventDto().getId())
-                        .voteNum(ele.getVoteNum()).voteTime(ele.getVoteTime())
-                        .build()).collect(Collectors.toList());
-        return votes;
-    }
     public List<Vote> getVoteRecord(Integer eventId, Integer userId, Integer pageIndex) {
         Pageable pageable = PageRequest.of(pageIndex-1, 5);
         List<VoteDto> voteDtos;

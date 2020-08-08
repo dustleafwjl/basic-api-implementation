@@ -23,7 +23,9 @@ public class VoteController {
     }
 
     @GetMapping("/rs/vote")
-    public ResponseEntity getVoteRecord(@RequestParam(required = false) Integer eventId, @RequestParam(required = false) Integer userId, @RequestParam(required = false) Integer pageIndex) {
+    public ResponseEntity getVoteRecord(@RequestParam(required = false) Integer eventId,
+                                        @RequestParam(required = false) Integer userId,
+                                        @RequestParam(required = false) Integer pageIndex) {
         List<Vote> votes = voteService.getVoteRecord(eventId, userId, pageIndex);
         return ResponseEntity.ok(votes);
     }

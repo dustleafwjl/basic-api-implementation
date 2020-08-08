@@ -34,7 +34,7 @@ public class RsController {
   }
 
   @PostMapping("/rs/event")
-  public ResponseEntity addRsEvent(@RequestBody RsEvent rsEvent) {
+  public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
     int index = rsService.addRsEvent(rsEvent);
     if(index == -1) {
       return ResponseEntity.badRequest().build();
@@ -42,11 +42,6 @@ public class RsController {
     return ResponseEntity.created(null).header("index", String.valueOf(index)).build();
   }
 
-//  @PutMapping("/rs/event/{index}")
-//  public ResponseEntity updateRsEvent(@PathVariable int index, @RequestBody @Valid RsEvent rsEvent) {
-//    rsService.updateRsEvent(index, rsEvent);
-//    return ResponseEntity.ok().build();
-//  }
   @DeleteMapping("/rs/event/{index}")
   public ResponseEntity removeRsEvent(@PathVariable int index) {
     rsService.removeRsEvent(index);
