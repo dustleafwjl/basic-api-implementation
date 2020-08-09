@@ -58,7 +58,6 @@ class UserControllerTest {
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk());
     }
-
     @Test
     public void should_set_user_when_register_given_info() throws Exception {
         User user = new User("wjl", "male", 18, "jianlin@qq.com", "17733334444");
@@ -66,7 +65,6 @@ class UserControllerTest {
         mockMvc.perform(post("/user").content(stringJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
-
     @Test
     public void should_return_bad_request_when_register_given_name_more_then_8() throws Exception {
         User user = new User("wjlddddddddd", "male", 18, "jianlin@qq.com", "17733334444");
@@ -99,7 +97,6 @@ class UserControllerTest {
         mockMvc.perform(post("/user").content(stringJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     public void should_return_bad_request_phone_when_register_given_phone_is_not_begin_one() throws Exception {
         User user = new User("wjl", "male", 18, "jianlin", "177333344443");
@@ -108,7 +105,6 @@ class UserControllerTest {
         mockMvc.perform(post("/user").content(stringJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     public void should_return_error_invalid_user_when_register_given_wrong_params() throws Exception {
         User user = new User("wjl", "male", 18, "jianlin", "177333344443");
@@ -119,14 +115,12 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.error", is("invalid user")))
                 .andExpect(status().isBadRequest());
     }
-
     @Test
     public void should_get_user_when_getUserById_given_userId() throws Exception {
         mockMvc.perform(get("/user/"+userDto.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user_name", is(userDto.getUserName())));
     }
-
     @Test
     public void should_remove_user_and_all_rsEvent_when_removeUserById_given_userId() throws Exception {
         RsEventDto rsEventDtofirst = RsEventDto.builder().eventName("第一条事件").keyWord("无标签").userDto(userDto).voteNum(2).build();
